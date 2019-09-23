@@ -138,10 +138,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 if (locationGps!!.accuracy > locationNetwork!!.accuracy){
                     //Toast.makeText(applicationContext, "lat : " + locationNetwork!!.latitude.toString(), Toast.LENGTH_SHORT).show()
                     //Toast.makeText(applicationContext, "long : " + locationNetwork!!.longitude.toString(), Toast.LENGTH_SHORT).show()
+                    mlocation = locationGps
                 }
                 else{
                     //Toast.makeText(applicationContext, "lat : " + locationGps!!.latitude.toString(), Toast.LENGTH_SHORT).show()
                     //Toast.makeText(applicationContext, "long : " + locationGps!!.longitude.toString(), Toast.LENGTH_SHORT).show()
+                    mlocation = locationNetwork
                 }
             }
 
