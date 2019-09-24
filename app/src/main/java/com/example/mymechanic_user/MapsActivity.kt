@@ -20,6 +20,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.firestore.FirebaseFirestore
+import java.lang.Exception
 
 private const val PERMISSION_REQUEST = 10
 
@@ -211,6 +213,39 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val curLocation = LatLng(mlocation!!.latitude, mlocation!!.longitude)
         mMap.addMarker(MarkerOptions().position(curLocation).title("Current Location"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(curLocation))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curLocation, 15f))
+        mMap.animateCamera(CameraUpdateFactory.zoomIn())
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15f), 2000, null)
+
+        val currentLatLng = LatLng(mlocation!!.latitude, mlocation!!.longitude)
+
+        val distRange = 25
+
+        var mechLocation: LatLng
+        var lat = 0.0
+        var lng = 0.0
+
+        val db = FirebaseFirestore.getInstance()
+
+        try {
+            db.collection("Shop").get()
+                .addOnSuccessListener {
+                    for(dc in it){
+                        lat = dc.data["Latitude"].toString().toDouble()
+                        lng = dc.data["Longitude"].toString().toDouble()
+                        mechLocation = LatLng(lat, lng)
+                        val dist = calcDistance(currentLatLng, mechLocation)
+
+                        if (distRange > dist)
+                        mMap.addMarker(MarkerOptions().position(mechLocation).title(dc.data["Email"].toString()))
+
+                        Toast.makeText(applicationContext, dist.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+        catch (e: Exception){
+            Toast.makeText(applicationContext, e.toString(), Toast.LENGTH_SHORT).show()
+        }
 
     }
 }
