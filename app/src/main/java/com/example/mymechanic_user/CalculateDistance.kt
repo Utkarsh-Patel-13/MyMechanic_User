@@ -16,7 +16,7 @@ fun calcDistance(latLng1: LatLng, latLng2: LatLng): Double{
 
     distance = 3963.0 * acos((sin(rlat1) * sin(rlat2)) + cos(rlat1) * cos(rlat2) * cos(rlng2 - rlng1))
 
-    distance = distance * 1.609344
+    distance *= 1.609344
 
     return distance
 }
